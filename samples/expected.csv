@@ -1,0 +1,14 @@
+filename,expected,note
+ok.png,match,"README example label, everything correct"
+wrong_abv.png,mismatch,"label says 40%, application says 45%"
+wrong_net_contents.png,mismatch,"label says 700 mL, application says 750 mL"
+wrong_brand.png,mismatch,label brand differs from application
+reworded_warning.png,mismatch,warning sentences reworded
+missing_warning.png,mismatch,no warning at all
+titlecase_warning.png,needs_review,header in Title Case (Jenny's rejection)
+import_scotch.png,match,import label with bottler + country of origin
+case_variant_brand.png,match,"Dave's case: label Stone's Throw, application STONE'S THROW"
+dark_label.png,match,"dark design, light text"
+photo_tilted.png,needs_review,"tilted 7°, blurred, noisy: deskewed in Python, one warning sentence reads ~0.35 -> human look"
+photo_glare.png,match,glare blob over the warning
+photo_low_light.png,match,"dark, low contrast"
