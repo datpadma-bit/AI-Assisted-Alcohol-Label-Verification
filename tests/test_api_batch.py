@@ -86,6 +86,23 @@ def batch_files(names, rows):
     return files
 
 
+def test_sample_cases_and_images_are_available():
+    with TestClient(main.app) as client:
+        response = client.get("/api/samples")
+
+        assert response.status_code == 200
+        samples = response.json()
+        assert len(samples) == 13
+
+        for sample in samples:
+            image_response = client.get(sample["url"])
+            assert image_response.status_code == 200
+            assert image_response.headers["content-type"] == "image/png"
+
+        manifest_response = client.get("/samples/manifest.csv")
+        assert manifest_response.status_code == 200
+
+
 ROWS = [
     ["ok.png", "ok.png", "Bourbon", "45% Alc./Vol. (90 Proof)", "750 mL", "", ""],
     ["titlecase.png", "titlecase.png", "Bourbon", "45%", "750 mL", "", ""],
