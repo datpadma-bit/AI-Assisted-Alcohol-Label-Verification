@@ -1,7 +1,9 @@
 .env
 .env.*
 !.env.example
+.dev.vars*
 .venv/
+.wrangler/
 __pycache__/
 *.pyc
 .pytest_cache/

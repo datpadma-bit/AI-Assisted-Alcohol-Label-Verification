@@ -63,6 +63,44 @@ Regenerate samples: `uv run python scripts/make_samples.py`.
 
 Docker: `docker build -t label-verifier . && docker run -p 8080:8080 --env-file .env label-verifier`
 
+## Deploy to Cloudflare Containers
+
+The FastAPI app runs in the Docker container, and a Cloudflare Worker forwards requests to it.
+This uses Cloudflare Containers (Workers Paid plan required); it is not a Cloudflare Pages
+deployment. The Worker configuration is in `wrangler.jsonc` and `cloudflare/worker.js`.
+
+1. Install and start Docker Desktop, then sign in to Cloudflare from the repository root:
+
+   ```bash
+   npx wrangler@4.152.0 login
+   ```
+
+2. Deploy the Worker and container from a terminal with Docker running:
+
+   ```bash
+   npx wrangler@4.152.0 deploy --config wrangler.jsonc
+   ```
+
+3. Add the Workers AI credentials to the Worker as secrets. Wrangler prompts for each value;
+   do not paste credentials into source files or commit them:
+
+   ```bash
+   npx wrangler@4.152.0 secret put CLOUDFLARE_ACCOUNT_ID --config wrangler.jsonc
+   npx wrangler@4.152.0 secret put CLOUDFLARE_API_TOKEN --config wrangler.jsonc
+   ```
+
+   Create the API token from Cloudflare's Workers AI page. A custom token needs **Workers AI
+   Read** and **Workers AI Edit** permissions. The Worker passes these secrets to the container
+   when it starts. Visit the `workers.dev` URL printed by Wrangler to start the app.
+
+The container needs outbound internet access to call `api.cloudflare.com`; the Worker enables
+this when starting the container. To redeploy code changes, run the Wrangler deploy command again
+from a machine with Docker running. Do not use a Cloudflare Pages build's `npx wrangler deploy`
+command for this setup: Pages build environments do not provide the local Docker engine Wrangler
+needs to build and push the Container image. If this GitHub repository is connected to a Pages
+project, disable that Pages project's automatic build/deploy for this repository before pushing
+deployment changes; deploy the Worker and Container with Wrangler instead.
+
 ## API
 
 - `POST /api/verify` — multipart: `image` + form fields `brand_name, class_type, alcohol_content, net_contents, [bottler_name_address], [country_of_origin]`

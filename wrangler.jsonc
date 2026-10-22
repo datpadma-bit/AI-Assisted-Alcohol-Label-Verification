@@ -1,0 +1,36 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ai-assisted-alcohol-label-verification",
+  "main": "cloudflare/worker.js",
+  "compatibility_date": "2026-10-22",
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  },
+  "containers": [
+    {
+      "class_name": "LabelVerifierContainer",
+      "scheduling_policy": "durable_object",
+      "max_instances": 1,
+      "images": {
+        "base": {
+          "dockerfile": "./Dockerfile"
+        }
+      }
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "LABEL_VERIFIER",
+        "class_name": "LabelVerifierContainer"
+      }
+    ]
+  },
+  "exports": {
+    "LabelVerifierContainer": {
+      "type": "durable-object",
+      "storage": "sqlite"
+    }
+  }
+}
