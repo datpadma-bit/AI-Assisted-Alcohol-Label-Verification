@@ -78,6 +78,6 @@ export class LabelVerifierContainer extends DurableObject {
 
 export default {
   fetch(request, env) {
-    return env.LABEL_VERIFIER.getByName("label-verifier").fetch(request);
+    return env.LABEL_VERIFIER.getByName("label-verifier-samples-v2").fetch(request);
   },
 };
